@@ -20,10 +20,6 @@ const RandomCharTerm = styled.span`
 `;
 
 export default class RandomChar extends Component {
-    constructor() {
-        super();
-        this.updateChar();
-    }
     
     gotService = new GotService();
 
@@ -31,6 +27,15 @@ export default class RandomChar extends Component {
         char: {},
         loading: true,
         error: false
+    }
+
+    componentDidMount() {
+        this.updateChar();
+        this.timerId = setInterval(this.updateChar, 1500);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.timerId);
     }
 
     onCharLoaded = (char) => {
@@ -47,13 +52,14 @@ export default class RandomChar extends Component {
         })
     }
 
-    updateChar() {
+    updateChar = () => {
         this.gotService.getRandomCharacter()
             .then(this.onCharLoaded)
             .catch(this.onError);
     }
 
     render() {
+        console.log('render')
         const {char, loading, error} = this.state;
 
         const errorMessage = error ? <ErrorMessage/> : null;
@@ -80,19 +86,19 @@ const View = ({char}) => {
             <ul className="list-group list-group-flush">
                 <li className="list-group-item d-flex justify-content-between">
                     <RandomCharTerm>Gender </RandomCharTerm>
-                    <span>{gender || 'N/A'}</span>
+                    <span>{gender}</span>
                 </li>
                 <li className="list-group-item d-flex justify-content-between">
                     <RandomCharTerm>Born </RandomCharTerm>
-                    <span>{born || 'N/A'}</span>
+                    <span>{born}</span>
                 </li>
                 <li className="list-group-item d-flex justify-content-between">
                     <RandomCharTerm>Died </RandomCharTerm>
-                    <span>{died  || 'N/A'}</span>
+                    <span>{died}</span>
                 </li>
                 <li className="list-group-item d-flex justify-content-between">
                     <RandomCharTerm>Culture </RandomCharTerm>
-                    <span>{culture || 'N/A'}</span>
+                    <span>{culture}</span>
                 </li>
             </ul>
         </>

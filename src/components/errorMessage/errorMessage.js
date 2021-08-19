@@ -6,11 +6,18 @@ const RandomBlockImage = styled.img`
     width: 100%;
 `;
 
+const ErrorMessageText = styled.span`
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 36px;
+    font-weight: 700;
+`;
+
 const ErrorMessage = () => {
     return (
         <>
             <RandomBlockImage src={img} alt="error"></RandomBlockImage>
-            <span>Something goes wrong</span>
+            <ErrorMessageText>Something goes wrong</ErrorMessageText>
         </>
     )
 }

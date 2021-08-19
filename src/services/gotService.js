@@ -15,7 +15,7 @@ export default class GotService {
 
     async getAllBooks() {
         const result = await this.getResource(`/books/`);
-        return result.map(this._transformBook());
+        return result.map(this._transformBook);
     }
     
     async getBook(id) {
@@ -25,7 +25,7 @@ export default class GotService {
     
     async getAllCharacters() {
         const result = await this.getResource(`/characters?page=5&pageSize=10`);
-        return result.map(this._transformCharacter());
+        return result.map(this._transformCharacter);
     }
     
     async getCharacter (id) {
@@ -35,7 +35,7 @@ export default class GotService {
     
     async getAllHouses() {
         const result = await this.getResource(`/houses/`);
-        return result.map(this._transformHouse());
+        return result.map(this._transformHouse);
     }
     
     async getHouse(id) {
@@ -52,30 +52,30 @@ export default class GotService {
     _transformCharacter(char) {
         return  {
             name: char.name,
-            gender: char.gender,
-            born: char.born,
-            died: char.died,
-            culture: char.culture
+            gender: char.gender || 'N/A',
+            born: char.born || 'N/A',
+            died: char.died || 'N/A',
+            culture: char.culture || 'N/A'
         }
     }
 
     _transformHouse(house) {
         return {
             name: house.name,
-            region: house.region,
-            words: house.words,
-            titles: house.titles,
-            overlord: house.overlord,
-            ancestralWeapons: house.ancestralWeapons
+            region: house.region || 'N/A',
+            words: house.words || 'N/A',
+            titles: house.titles || 'N/A',
+            overlord: house.overlord || 'N/A',
+            ancestralWeapons: house.ancestralWeapons || 'N/A'
         }
     }
 
     _transformBook(book) {
         return {
             name: book.name,
-            numberOfPages: book.numberOfPages,
-            publisher: book.publisher,
-            released: book.released
+            numberOfPages: book.numberOfPages || 'N/A',
+            publisher: book.publisher || 'N/A', 
+            released: book.released || 'N/A'
         }
     }
 }
