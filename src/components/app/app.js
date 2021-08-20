@@ -1,65 +1,73 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {Col, Row, Container} from 'reactstrap';
 import Header from '../header';
 import RandomChar from '../randomChar';
 import ErrorMessage from '../errorMessage';
-import CharacterPage from '../characterPage/characterPage';
+import {CharacterPage, BooksPage, HousesPage, BooksItem} from '../pages';
+import gotService from '../../services/gotService';
+import {BrowserRouter as Router, Route} from 'react-router-dom';
+
+import './app.css';
 
 
 export default class App extends Component {
+    gotService = new gotService();
 
     state = {
-        toggleChar: true,
-        error: false
-    }
+        showRandomChar: true,
+        error: false,
+        selectedHouse: 20
+    };
 
     componentDidCatch() {
-        console.log('error')
+        console.log('error');
         this.setState({
             error: true
         })
     }
 
-    showRandomChar = () => {
+    toggleRandomChar = () => {
         this.setState((state) => {
             return {
-                toggleChar: !state.toggleChar
+                showRandomChar: !state.showRandomChar
             }
-        })
-    }
+        });
+    };
+
 
     render() {
-        if(this.state.error) {
+        const char = this.state.showRandomChar ? <RandomChar/> : null;
+
+        if (this.state.error) {
             return <ErrorMessage/>
         }
 
-        const char = this.state.toggleChar ? <RandomChar/> : null;
-        const btnText = this.state.toggleChar ? 'Hide' : 'Show';
-
         return (
-            <> 
-                <Container>
-                    <Header />
-                </Container>
-                <Container>
-                    <Row>
-                        <Col lg={{size: 5, offset: 0}} >
+            <Router> 
+                <div className='app'>
+                    <Container>
+                        <Header />
+                    </Container>
+                    <Container>
+                        <Row>
+                            <Col lg={{size: 5, offset: 0}}>
                             {char}
-                        </Col>
-                        <Col lg={{size: 5, offset: 0}} className="mx-auto">
                             <button 
-                                type="button" 
-                                className="btn btn-primary mb-5 mt-5"
-                                onClick={this.showRandomChar}
-                                >
-                                    {btnText} Random Character
-                            </button>
-                        </Col>
-                    </Row>
-                    <CharacterPage/>
-                </Container>
-            </>
+                                className="toggle-btn"
+                                onClick={this.toggleRandomChar}>Toggle random character</button>
+                            </Col>
+                        </Row>
+                        <Route path='/' component={() => <h1>Welcome to GOT DB</h1>} exact/>
+                        <Route path='/characters' component={CharacterPage} />
+                        <Route path='/books' component={BooksPage} exact/>
+                        <Route path='/books/:id' render={({match}) => {
+                            const {id} = match.params;
+                        return <BooksItem bookId={id}/>}}/>
+                        <Route path='/houses' component={HousesPage} />
+                    </Container>
+                </div>
+            </Router>
         )
     }
-};
 
+};

@@ -1,50 +1,50 @@
 import React, {Component} from 'react';
-import styled from 'styled-components';
-import GotService from '../../services/gotService';
+import './itemList.css';
 import Spinner from '../spinner';
 
-const ListItem = styled.li`
-    cursor: pointer;
-`;
 export default class ItemList extends Component {
 
-    gotService = new GotService();
-
     state = {
-        charList: null
+        itemList: null
     }
 
     componentDidMount() {
-        this.gotService.getAllCharacters()
-            .then((charList) => {
+        const {getData} = this.props;
+
+        getData()
+            .then( (itemList) => {
                 this.setState({
-                    charList
+                    itemList
                 })
             })
     }
 
     renderItems(arr) {
-        return arr.map((item, i) => {
+        return arr.map((item) => {
+            const {id} = item;
+
+            const label = this.props.renderItem(item);
+
             return (
-                <ListItem
+                <li 
+                    key={id}
                     className="list-group-item"
-                    key={i}
-                    onClick={() => this.props.onCharSelected(41 + i)}>
-                        {item.name}
-                </ListItem>
+                    onClick={ () => this.props.onItemSelected(id)}>
+                    {label}
+                </li>
             )
         })
     }
 
     render() {
+        const {itemList} = this.state;
 
-        const {charList} = this.state;
-
-        if(!charList) {
+        if (!itemList) {
             return <Spinner/>
         }
 
-        const items = this.renderItems(charList);
+        const items = this.renderItems(itemList);
+
 
         return (
             <ul className="item-list list-group">

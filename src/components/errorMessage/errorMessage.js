@@ -1,23 +1,12 @@
 import React from 'react';
-import styled from 'styled-components';
+import './errorMessage.css';
 import img from './error.jpg';
-
-const RandomBlockImage = styled.img`
-    width: 100%;
-`;
-
-const ErrorMessageText = styled.span`
-    color: #FFFFFF;
-    text-align: center;
-    font-size: 36px;
-    font-weight: 700;
-`;
 
 const ErrorMessage = () => {
     return (
         <>
-            <RandomBlockImage src={img} alt="error"></RandomBlockImage>
-            <ErrorMessageText>Something goes wrong</ErrorMessageText>
+            <img src={img} alt='error'></img>
+            <span>Something goes wrong</span>
         </>
     )
 }

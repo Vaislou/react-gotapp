@@ -1,28 +1,12 @@
 import React, {Component} from 'react';
-import styled from 'styled-components';
-import GotService from '../../services/gotService';
+import './randomChar.css';
+import gotService from '../../services/gotService';
 import Spinner from '../spinner';
 import ErrorMessage from '../errorMessage';
 
-const RandomCharBlock = styled.div`
-    background-color: #fff;
-    padding: 25px 25px 15px 25px;
-    margin-bottom: 40px;
-`;
-
-const RandomCharTitle = styled.h4`
-    margin-bottom: 20px;
-    text-align: center;
-`;
-
-const RandomCharTerm = styled.span`
-    font-weight: bold;
-`;
-
 export default class RandomChar extends Component {
-    
-    gotService = new GotService();
 
+    gotService = new gotService();
     state = {
         char: {},
         loading: true,
@@ -31,10 +15,10 @@ export default class RandomChar extends Component {
 
     componentDidMount() {
         this.updateChar();
-        this.timerId = setInterval(this.updateChar, 1500);
+        this.timerId = setInterval(this.updateChar, 15000);
     }
 
-    componentWillUnmount() {
+    componentWillUnmount(){
         clearInterval(this.timerId);
     }
 
@@ -42,10 +26,10 @@ export default class RandomChar extends Component {
         this.setState({
             char,
             loading: false
-        });
+        })
     }
 
-    onError = () => {
+    onError = (err) => {
         this.setState({
             error: true,
             loading: false
@@ -53,54 +37,51 @@ export default class RandomChar extends Component {
     }
 
     updateChar = () => {
-        this.gotService.getRandomCharacter()
+        const id = Math.floor(Math.random()*140 + 25); //25-140
+        this.gotService.getCharacter(id)
             .then(this.onCharLoaded)
             .catch(this.onError);
     }
 
     render() {
-        console.log('render')
-        const {char, loading, error} = this.state;
+        const { char, loading, error } = this.state;
 
         const errorMessage = error ? <ErrorMessage/> : null;
-        const spinner = loading ? <Spinner/> : null
+        const spinner = loading ? <Spinner/> : null;
         const content = !(loading || error) ? <View char={char}/> : null;
 
         return (
-            <RandomCharBlock className="rounded">
+            <div className="random-block rounded">
                 {errorMessage}
                 {spinner}
                 {content}
-            </RandomCharBlock>
+            </div>
         );
     }
 }
-
-
 const View = ({char}) => {
     const {name, gender, born, died, culture} = char;
-
     return (
         <>
-            <RandomCharTitle>Random Character: {name}</RandomCharTitle>
+            <h4>Random Character: {name}</h4>
             <ul className="list-group list-group-flush">
                 <li className="list-group-item d-flex justify-content-between">
-                    <RandomCharTerm>Gender </RandomCharTerm>
+                    <span className="term">Gender </span>
                     <span>{gender}</span>
                 </li>
                 <li className="list-group-item d-flex justify-content-between">
-                    <RandomCharTerm>Born </RandomCharTerm>
+                    <span className="term">Born </span>
                     <span>{born}</span>
                 </li>
                 <li className="list-group-item d-flex justify-content-between">
-                    <RandomCharTerm>Died </RandomCharTerm>
+                    <span className="term">Died </span>
                     <span>{died}</span>
                 </li>
                 <li className="list-group-item d-flex justify-content-between">
-                    <RandomCharTerm>Culture </RandomCharTerm>
+                    <span className="term">Culture </span>
                     <span>{culture}</span>
                 </li>
             </ul>
         </>
     )
-} 
+}
